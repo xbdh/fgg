@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package comment.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "comments/api/comment/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.comment.v1";
+option java_outer_classname = "HelloWorldProtoV1";
+
+// The greeting service definition.
+service Comment {
+
+  rpc CreateComment(CreateRequest) returns (CreateReply){
+    option (google.api.http) = {
+      post: "/v1/comment/"
+      body: "*"
+    };
+
+  }
+
+  rpc ListTweetComment(ListRequest) returns (ListReply){
+    option (google.api.http) = {
+      post: "/v1/comment/list"
+      body: "*"
+    };
+  }
+
+}
+
+// The request message containing the user's name.
+message CommentInfo{
+  uint64 id =1;
+  uint64 userId=2;
+  uint64 tweetId =3;
+  string content=4;
+}
+
+message CreateRequest{
+  uint64 userId=1;
+  uint64 tweetId =2;
+  string content=4;
+}
+
+
+message CreateReply{
+  CommentInfo  commentInfo=1;
+}
+
+message ListRequest{
+  uint64 tweetId=1;
+}
+
+
+message ListReply{
+  repeated CommentInfo commentInfo =1;
+}
+
