@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package friendship.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "friendships/api/friendship/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.friendship.v1";
+option java_outer_classname = "HelloWorldProtoV1";
+
+// The greeting service definition.
+service Friendship {
+  // Sends a greeting
+
+
+    rpc CreateFriendship(CreateRequest) returns (CreateReply){
+      option (google.api.http) = {
+        post: "/v1/friendship/"
+        body: "*"
+      };
+
+    }
+
+    rpc Followings(FollowingRequest) returns (FollowingReply){
+      option (google.api.http) = {
+        post: "/v1/friendship/ings"
+        body: "*"
+      };
+    }
+
+    rpc Followers(FollowerRequest) returns (FollowerReply){
+      option (google.api.http) = {
+        post: "/v1/friendship/ers"
+        body: "*"
+      };
+    }
+
+
+}
+
+message FrienddhipInfo{
+  uint64 id =1;
+  uint64 fromUserId=2;
+  uint64 toUserId =3;
+
+}
+
+message CreateRequest{
+  uint64 fromUserId=1;
+  uint64 toUserId =2;
+}
+
+
+message CreateReply{
+  FrienddhipInfo friendshipInfo =1;
+}
+
+message FollowingRequest{
+  uint64 fromUserId=1;
+}
+
+
+message FollowingReply{
+ repeated FrienddhipInfo friendshipInfo =1;
+}
+
+message FollowerRequest{
+  uint64 toUserId =1;
+}
+
+
+message FollowerReply{
+  repeated FrienddhipInfo friendshipInfo =1;
+}

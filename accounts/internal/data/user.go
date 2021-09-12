@@ -25,7 +25,7 @@ func (u *userRepo) GetById(ctx context.Context, id int64) (*biz.User, error) {
 
 func (u *userRepo) GetByName(ctx context.Context, name string) (*biz.User, error) {
 	user:=biz.User{}
-	result:=u.data.db.WithContext(ctx).First(&user,name)
+	result:=u.data.db.WithContext(ctx).Where("name =? ",name).First(&user)
 	return &user, result.Error
 }
 

@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "accounts/api/user/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.user.v1";
+option java_outer_classname = "HelloWorldProtoV1";
+
+// The greeting service definition.
+service User {
+
+    rpc GetUserByName(NameRequest) returns(NameReply){
+        option (google.api.http) = {
+          get: "/v1/user/name/{name}"
+        };
+    }
+
+   //通过name查询用户
+    rpc GetUserById(IdRequest) returns (IdReply){
+        option (google.api.http) = {
+          get: "/v1/user/{id}"
+      };
+    }
+
+    //通过id查询用户
+    rpc CreateUser(CreateRequest) returns (CreateReply){
+        option (google.api.http) = {
+          post: "/v1/user/"
+          body: "*"
+      };
+    }
+
+    //添加用户,返回id就行了
+    rpc UpdateUser(UpdateRequest) returns (UpdateReply){
+        option (google.api.http) = {
+          put: "/v1/user/{id}"
+          body: "*"
+      };
+    }
+
+    rpc ListUser(ListRequest) returns (ListReply){
+      option (google.api.http) = {
+        post: "/v1/ids/"
+        body: "*"
+      };
+    }
+
+}
+
+message UserInfo {
+    uint64 id = 1;
+    string name = 2;
+    string password = 3;
+    string email = 4;
+}
+
+
+message NameRequest {
+    string name = 1;
+}
+message NameReply {
+    UserInfo Userinfo =1;
+}
+
+
+message IdRequest {
+    int64 id = 1;
+}
+message IdReply {
+    UserInfo Userinfo =1;
+}
+
+
+message CreateRequest {
+    string name = 1;
+    string password = 2;
+    string email = 3;
+}
+
+message CreateReply {
+    UserInfo Userinfo =1;
+}
+
+
+message UpdateRequest {
+    int64 id = 1;
+    string name = 2;
+
+}
+message UpdateReply{
+    UserInfo Userinfo=1;
+}
+
+
+message ListRequest {
+    repeated int64 id=1;
+}
+message ListReply {
+    repeated UserInfo results = 1;
+}

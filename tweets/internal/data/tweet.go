@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/Shopify/sarama"
 	"github.com/go-kratos/kratos/v2/log"
 	"tweets/internal/biz"
@@ -54,7 +53,7 @@ func (tr *tweetRepo) CreateTweet(ctx context.Context, tweet *biz.Tweet) error {
 				tr.log.Info("kafka send data success")
 
 		}
-		fmt.Println("send ok")
+		//fmt.Println("send ok")
 	}
 	return result.Error
 }

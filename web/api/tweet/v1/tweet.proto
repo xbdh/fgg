@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package tweet.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";  // 导入时间
+
+
+option go_package = "tweets/api/tweet/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.tweet.v1";
+option java_outer_classname = "HelloWorldProtoV1";
+
+// The greeting service definition.
+service Tweets {
+  // Sends a greeting
+  rpc CreateTweets(CreateRequest) returns (CreateReply){
+    option (google.api.http) = {
+      post: "/v1/tweet/"
+      body: "*"
+    };
+  }
+  rpc GetTweetByUserId(UserIdRequest) returns (UserIdReply){
+    option (google.api.http) = {
+      post: "/v1/tweetsuserId/"
+
+      body: "*"
+    };
+  }
+
+  rpc GetTweetByTweetId(TweetIdRequest) returns (TweetIdReply){
+    option (google.api.http) = {
+      post: "/v1/tweetId/"
+
+      body: "*"
+    };
+  }
+
+}
+
+message TweetInfo{
+  uint64 id=1;
+  uint64  userId =2;
+  string  content=3;
+  uint64 likesCount=4;
+  uint64 commentsCount=5;
+  google.protobuf.Timestamp createAt=6;
+}
+
+message CreateRequest{
+  uint64  userId =1;
+  string  content=2;
+  uint64 likesCount=3;
+  uint64 commentsCount=4;
+}
+
+message CreateReply{
+ TweetInfo tweetInfo=1;
+
+}
+
+message UserIdRequest{
+  uint64  userId =1;
+
+}
+message UserIdReply{
+ repeated TweetInfo tweetInfo=1;
+
+}
+message TweetIdRequest{
+  uint64  tweetId =1;
+
+}
+message TweetIdReply{
+  TweetInfo tweetInfo=1;
+
+}
