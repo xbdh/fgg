@@ -6,13 +6,12 @@ import (
 	"github.com/google/uuid"
 	"os"
 
-	"tweets/internal/conf"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
+	"tweets/internal/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -39,7 +38,7 @@ func init() {
 
 }
 
-func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server,rr registry.Registrar) *kratos.App {
+func newApp(logger log.Logger, gs *grpc.Server,rr registry.Registrar) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -47,7 +46,6 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server,rr registry.Regi
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
 		kratos.Server(
-			hs,
 			gs,
 		),
 		kratos.Registrar(rr),

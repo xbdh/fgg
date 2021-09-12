@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"gorm.io/driver/mysql"
@@ -65,6 +66,7 @@ func NewDB(conf* conf.Data,logger log.Logger) *gorm.DB{
 
 	if err!=nil{
 		log.Fatal("failed opening connection to mysql :%v",err)
+		return nil
 	}
 
 	// 初始化数据表时，只用一次
@@ -82,6 +84,10 @@ func NewCache(conf* conf.Data,logger log.Logger) *redis.Client{
 
 	})
 
+	_,err:=rdb.Ping(context.Background()).Result()
+	if err!=nil{
+		log.Fatal("redis cant ping")
+	}
 	log.Info("connect to redis")
 	return rdb
 }

@@ -24,23 +24,24 @@ func main() {
 
 	tweetGroup:=router.Group("/v1/tweet")
 	{
-		tweetGroup.POST("/")
-		tweetGroup.GET("/userid")
-		tweetGroup.GET("/tweetid")
+		tweetGroup.POST("/",handlers.PostTweet)
+		tweetGroup.GET("/:id",handlers.GetTweetById)
+		tweetGroup.GET("/user/:id",handlers.GetTweetByUserId)
+
 	}
 
 
 	friendshipGroup:=router.Group("/v1/friendship")
 	{
-		friendshipGroup.POST("/")
-		friendshipGroup.GET("follower/:userid")
-		friendshipGroup.GET("following/:userid")
+		friendshipGroup.POST("/",handlers.PostFriend)
+		friendshipGroup.GET("/follower/:userid",handlers.Follower)
+		friendshipGroup.GET("/following/:userid",handlers.Following)
 	}
 
 	newsfeedGroup:=router.Group("/v1/newsfeed")
 	{
 		newsfeedGroup.POST("/")
-		newsfeedGroup.GET("/list")
+		newsfeedGroup.GET("/list/:id",handlers.List)
 	}
 
 router.Run(":8888")

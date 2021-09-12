@@ -31,8 +31,8 @@ func (s *TweetsService) CreateTweets(ctx context.Context, req *pb.CreateRequest)
 	ts:=biz.Tweet{
 		UserId:    req.GetUserId(),
 		Content: req.GetContent(),
-		LikesCount:    req.GetLikesCount(),
-		CommentsCount: req.GetCommentsCount(),
+		//LikesCount:    req.GetLikesCount(),
+		//CommentsCount: req.GetCommentsCount(),
 	}
 
 	err:=s.tc.CreateTweet(ctx,&ts)
@@ -40,14 +40,15 @@ func (s *TweetsService) CreateTweets(ctx context.Context, req *pb.CreateRequest)
 		return nil, err
 	}
 
+
 	return &pb.CreateReply{
 		TweetInfo: &pb.TweetInfo{
 			Id:       uint64(ts.ID),
 			UserId: ts.UserId,
 			Content: ts.Content,
-			LikesCount: ts.LikesCount,
-			CommentsCount: ts.CommentsCount,
-			CreateAt:timestamppb.New(ts.CreatedAt),
+			//LikesCount: ts.LikesCount,
+			//CommentsCount: ts.CommentsCount,
+			CreatedAt:timestamppb.New(ts.CreatedAt),
 		},
 	}, nil
 
@@ -71,9 +72,9 @@ func (s *TweetsService) GetTweetByUserId(ctx context.Context, req *pb.UserIdRequ
 			Id:       uint64(tweets[i].ID),
 			UserId: tweets[i].UserId,
 			Content: tweets[i].Content,
-			LikesCount: tweets[i].LikesCount,
-			CommentsCount: tweets[i].CommentsCount,
-			CreateAt:timestamppb.New(tweets[i].CreatedAt),
+			//LikesCount: tweets[i].LikesCount,
+			//CommentsCount: tweets[i].CommentsCount,
+			CreatedAt:timestamppb.New(tweets[i].CreatedAt),
 		}
 		tweetinfo=append(tweetinfo,&ti)
 
@@ -103,9 +104,9 @@ func (s *TweetsService) GetTweetByTweetId(ctx context.Context, req *pb.TweetIdRe
 		Id:       uint64(tweet.ID),
 		UserId: tweet.UserId,
 		Content: tweet.Content,
-		LikesCount: tweet.LikesCount,
-		CommentsCount: tweet.CommentsCount,
-		CreateAt:timestamppb.New(tweet.CreatedAt),
+		//LikesCount: tweet.LikesCount,
+		//CommentsCount: tweet.CommentsCount,
+		CreatedAt:timestamppb.New(tweet.CreatedAt),
 
 	}
 	//fmt.Println(users)

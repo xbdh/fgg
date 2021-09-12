@@ -26,10 +26,9 @@ func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	friendshipRepo := data.NewFriendshipRepo(dataData, logger)
 	friendshipUsecase := biz.NewFriendshipUsecase(friendshipRepo, logger)
 	friendshipService := service.NewFriendshipService(friendshipUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, friendshipService, logger)
 	grpcServer := server.NewGRPCServer(confServer, friendshipService, logger)
 	registrar := server.NewRegistrar(registry)
-	app := newApp(logger, httpServer, grpcServer, registrar)
+	app := newApp(logger, grpcServer, registrar)
 	return app, func() {
 		cleanup()
 	}, nil

@@ -29,10 +29,9 @@ func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	tweetRepo := data.NewTweetRepo(dataData, logger)
 	tweetUsecase := biz.NewTweetUsecase(tweetRepo, logger)
 	tweetsService := service.NewTweetsService(tweetUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, tweetsService, logger)
 	grpcServer := server.NewGRPCServer(confServer, tweetsService, logger)
 	registrar := server.NewRegistrar(registry)
-	app := newApp(logger, httpServer, grpcServer, registrar)
+	app := newApp(logger, grpcServer, registrar)
 	return app, func() {
 		cleanup()
 	}, nil

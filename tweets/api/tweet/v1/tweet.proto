@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tweet.v1;
 
-import "google/api/annotations.proto";
+//import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";  // 导入时间
 
 
@@ -15,25 +15,25 @@ option java_outer_classname = "HelloWorldProtoV1";
 service Tweets {
   // Sends a greeting
   rpc CreateTweets(CreateRequest) returns (CreateReply){
-    option (google.api.http) = {
-      post: "/v1/tweet/"
-      body: "*"
-    };
+//    option (google.api.http) = {
+//      post: "/v1/tweet/"
+//      body: "*"
+//    };
   }
   rpc GetTweetByUserId(UserIdRequest) returns (UserIdReply){
-    option (google.api.http) = {
-      post: "/v1/tweetsuserId/"
-
-      body: "*"
-    };
+//    option (google.api.http) = {
+//      post: "/v1/tweetsuserId/"
+//
+//      body: "*"
+//    };
   }
 
   rpc GetTweetByTweetId(TweetIdRequest) returns (TweetIdReply){
-    option (google.api.http) = {
-      post: "/v1/tweetId/"
-
-      body: "*"
-    };
+//    option (google.api.http) = {
+//      post: "/v1/tweetId/"
+//
+//      body: "*"
+//    };
   }
 
 }
@@ -42,16 +42,16 @@ message TweetInfo{
   uint64 id=1;
   uint64  userId =2;
   string  content=3;
-  uint64 likesCount=4;
-  uint64 commentsCount=5;
-  google.protobuf.Timestamp createAt=6;
+//  uint64 likesCount=4;
+//  uint64 commentsCount=5;
+  google.protobuf.Timestamp createdAt=6;
 }
 
 message CreateRequest{
   uint64  userId =1;
   string  content=2;
-  uint64 likesCount=3;
-  uint64 commentsCount=4;
+//  uint64 likesCount=3;
+//  uint64 commentsCount=4;
 }
 
 message CreateReply{

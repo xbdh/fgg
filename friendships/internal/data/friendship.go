@@ -15,7 +15,15 @@ func (fr *friendshipRepo) GetFollowings(ctx context.Context, fromUserId uint64) 
 	friendships:=[]*biz.Friendship{}
 
 	result:=fr.data.db.WithContext(ctx).Where("from_User_id = ?",fromUserId).Find(&friendships)
-
+	//key:=fmt.Sprintf("followings:%d",fromUserId)
+	//if result.Error==nil{
+	//	for i:=0;i<len(friendships);i++{
+	//		err:=fr.data.rdb.LPush(ctx,key,friendships[i].FromId).Err()
+	//		if err!=nil{
+	//			fr.log.Info("send to reids wrong")
+	//		}
+	//	}
+	//}
 	return friendships,result.Error
 }
 

@@ -26,8 +26,8 @@ func (s *FriendshipService) CreateFriendship(ctx context.Context, req *pb.Create
 
 	friendship:=biz.Friendship{
 
-		FromUserId: req.GetFromUserId(),
-		ToUserId:   req.GetToUserId(),
+		FromId: req.GetFromUserId(),
+		ToId:   req.GetToUserId(),
 	}
 
 	err:=s.uc.CreateFriendship(ctx,&friendship)
@@ -39,8 +39,8 @@ func (s *FriendshipService) CreateFriendship(ctx context.Context, req *pb.Create
 	return &pb.CreateReply{
 		FriendshipInfo: &pb.FrienddhipInfo{
 			Id:         uint64(friendship.ID),
-			FromUserId: friendship.FromUserId,
-			ToUserId:   friendship.ToUserId,
+			FromUserId: friendship.FromId,
+			ToUserId:   friendship.ToId,
 		},
 	}, nil
 }
@@ -58,8 +58,8 @@ func (s *FriendshipService) Followings(ctx context.Context, req *pb.FollowingReq
 	for i:=0;i<len(friendships);i++{
 		ui:=pb.FrienddhipInfo{
 			Id:            uint64(friendships[i].ID),
-			FromUserId:     friendships[i].FromUserId,
-			ToUserId:      friendships[i].ToUserId,
+			FromUserId:     friendships[i].FromId,
+			ToUserId:      friendships[i].ToId,
 
 		}
 		friendshipInfo=append(friendshipInfo,&ui)
@@ -84,8 +84,8 @@ func (s *FriendshipService) Followers(ctx context.Context, req *pb.FollowerReque
 	for i:=0;i<len(friendships);i++{
 		ui:=pb.FrienddhipInfo{
 			Id:            uint64(friendships[i].ID),
-			FromUserId:     friendships[i].FromUserId,
-			ToUserId:      friendships[i].ToUserId,
+			FromUserId:     friendships[i].FromId,
+			ToUserId:      friendships[i].ToId,
 
 		}
 		friendshipInfo=append(friendshipInfo,&ui)

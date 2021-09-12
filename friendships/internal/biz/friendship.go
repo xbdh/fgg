@@ -3,13 +3,14 @@ package biz
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Friendship struct {
-	gorm.Model
-	FromUserId uint64
-	ToUserId uint64
+	ID        uint64           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time		`json:"created_at"`
+	FromId uint64          `json:"from_id"`
+	ToId uint64            `json:"to_id"`
 }
 
 type FriendshipRepo interface {

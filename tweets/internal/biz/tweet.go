@@ -3,15 +3,16 @@ package biz
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Tweet struct {
-	gorm.Model
-	UserId uint64
-	Content string
-	LikesCount uint64
-	CommentsCount uint64
+
+	ID        uint64           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time		`json:"created_at"`
+	UserId uint64           `gorm:"index" json:"user_id"`
+	Content string          `json:"content"`
+
 }
 
 type NewsFeed struct {

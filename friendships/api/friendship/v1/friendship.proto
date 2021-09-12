@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package friendship.v1;
 
-import "google/api/annotations.proto";
+//import "google/api/annotations.proto";
 
 option go_package = "friendships/api/friendship/v1;v1";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ service Friendship {
 
 
     rpc CreateFriendship(CreateRequest) returns (CreateReply){
-      option (google.api.http) = {
-        post: "/v1/friendship/"
-        body: "*"
-      };
+//      option (google.api.http) = {
+//        post: "/v1/friendship/"
+//        body: "*"
+//      };
 
     }
 
     rpc Followings(FollowingRequest) returns (FollowingReply){
-      option (google.api.http) = {
-        post: "/v1/friendship/ings"
-        body: "*"
-      };
+//      option (google.api.http) = {
+//        post: "/v1/friendship/ings"
+//        body: "*"
+//      };
     }
 
     rpc Followers(FollowerRequest) returns (FollowerReply){
-      option (google.api.http) = {
-        post: "/v1/friendship/ers"
-        body: "*"
-      };
+//      option (google.api.http) = {
+//        post: "/v1/friendship/ers"
+//        body: "*"
+//      };
     }
 
 
