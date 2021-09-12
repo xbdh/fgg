@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package newsfeed.v1;
 
-import "google/api/annotations.proto";
+//import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
 
 option go_package = "newsfeeds/api/newsfeed/v1;v1";
 option java_multiple_files = true;
@@ -13,18 +15,18 @@ option java_outer_classname = "HelloWorldProtoV1";
 service NewsFeed {
 
   rpc CreateNewsFeed(CreateRequest) returns (CreateReply){
-    option (google.api.http) = {
-      post: "/v1/newsfeed/"
-      body: "*"
-    };
+//    option (google.api.http) = {
+//      post: "/v1/newsfeed/"
+//      body: "*"
+//    };
 
   }
 
   rpc ListFollowTweet(ListRequest) returns (ListReply){
-    option (google.api.http) = {
-      post: "/v1/newsfeed/list"
-      body: "*"
-    };
+//    option (google.api.http) = {
+//      post: "/v1/newsfeed/list"
+//      body: "*"
+//    };
   }
 
 }
@@ -34,12 +36,14 @@ message NewsFeedInfo{
   uint64 id =1;
   uint64 userId=2;
   uint64 tweetId =3;
-
+  TweetInfo tweetInfo =4;
+  google.protobuf.Timestamp CreateAt =5;
 }
 
 message CreateRequest{
   uint64 userId=1;
   uint64 tweetId =2;
+
 }
 
 
@@ -54,5 +58,12 @@ message ListRequest{
 
 message ListReply{
   repeated NewsFeedInfo newFeedInfo =1;
-}
 
+}
+message TweetInfo{
+  uint64 id=1;
+  uint64  userId =2;
+  string  content=3;
+  google.protobuf.Timestamp CreatedAt =6;
+
+}

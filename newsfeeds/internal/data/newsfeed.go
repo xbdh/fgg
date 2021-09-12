@@ -33,9 +33,9 @@ func (n *newsfeedRepo) ListFollowTweet(ctx context.Context, userId uint64) ([]*b
 			tweet.Id=tweetIdReply.TweetInfo.Id
 			tweet.UserId=tweetIdReply.TweetInfo.UserId
 			tweet.Content=tweetIdReply.TweetInfo.Content
-			tweet.LikesCount=tweetIdReply.TweetInfo.LikesCount
-			tweet.CommentsCount=tweetIdReply.TweetInfo.CommentsCount
-			tweet.CreateAt=tweetIdReply.TweetInfo.CreateAt.AsTime()
+			//tweet.LikesCount=tweetIdReply.TweetInfo.LikesCount
+			//tweet.CommentsCount=tweetIdReply.TweetInfo.CommentsCount
+			tweet.CreateAt=tweetIdReply.TweetInfo.CreatedAt.AsTime()
 
 			allfeed.Nf=newsfeeds[i];
 			allfeed.T=&tweet

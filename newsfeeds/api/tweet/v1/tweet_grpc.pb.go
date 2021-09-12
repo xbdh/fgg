@@ -171,5 +171,5 @@ var Tweets_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/tweet/v1/ttt.proto",
+	Metadata: "api/tweet/v1/tweet.proto",
 }

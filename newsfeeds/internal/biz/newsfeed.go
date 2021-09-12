@@ -4,14 +4,13 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type NewsFeed struct {
-	gorm.Model
-	UserId uint64
-	TweetId uint64
+	ID        uint64           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time		`json:"created_at"`
+	UserId uint64                `json:"user_id"`
+	TweetId uint64               `json:"tweet_id"`
 }
 
 type Tweet struct {
