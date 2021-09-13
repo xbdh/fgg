@@ -4,6 +4,10 @@ import (
 	"flag"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/sdk/resource"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"os"
 
 	"newsfeeds/internal/conf"
@@ -12,6 +16,8 @@ import (
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 
 )
 
@@ -36,6 +42,27 @@ func init() {
 
 
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+}
+// Set global trace provider
+func setTracerProvider(url string) error {
+	// Create the Jaeger exporter
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		return err
+	}
+	tp := tracesdk.NewTracerProvider(
+		// Set the sampling rate based on the parent span to 100%
+		tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.TraceIDRatioBased(1.0))),
+		// Always be sure to batch in production.
+		tracesdk.WithBatcher(exp),
+		// Record information about this application in an Resource.
+		tracesdk.WithResource(resource.NewSchemaless(
+			semconv.ServiceNameKey.String(Name),
+			attribute.String("env", "dev"),
+		)),
+	)
+	otel.SetTracerProvider(tp)
+	return nil
 }
 
 func newApp(logger log.Logger, gs *grpc.Server,rr registry.Registrar) *kratos.App {
@@ -81,6 +108,11 @@ func main() {
 	if err := c.Scan(&rc); err != nil{
 		panic(err)
 	}
+
+	if err := setTracerProvider(bc.Trace.Endpoint); err != nil {
+		panic(err)
+	}
+
 
 	app, cleanup, err := initApp(bc.Server,&rc, bc.Data, logger)
 

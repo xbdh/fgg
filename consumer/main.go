@@ -5,13 +5,16 @@ import (
 	"encoding/json"
 	"fmt"
 	consul "github.com/go-kratos/consul/registry"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	consulAPI "github.com/hashicorp/consul/api"
 	"sync"
 	fv1 "consumer/friendship/v1"
 	nv1 "consumer/newsfeed/v1"
+	"time"
 
 	"github.com/Shopify/sarama"
+	grpcx "google.golang.org/grpc"
 )
 
 var wg sync.WaitGroup
@@ -38,6 +41,13 @@ func main() {
 		context.Background(),
 		grpc.WithEndpoint("discovery:///friendships"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+		),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
 		)
 
 
@@ -51,6 +61,13 @@ func main() {
 		context.Background(),
 		grpc.WithEndpoint("discovery:///newsfeeds"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+		),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
 	)
 
 	if err!=nil{

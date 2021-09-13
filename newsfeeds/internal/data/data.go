@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	consul "github.com/go-kratos/consul/registry"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -15,6 +17,7 @@ import (
 	"github.com/google/wire"
 	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
+	grpcx "google.golang.org/grpc"
 
 	tweetCli "newsfeeds/api/tweet/v1"
 )
@@ -89,6 +92,14 @@ func NewTweetsServiceClient(r registry.Discovery) tweetCli.TweetsClient {
 		context.Background(),
 		grpc.WithEndpoint("discovery:///tweets"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+		),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
+
 
 	)
 	if err != nil {

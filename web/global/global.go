@@ -3,6 +3,16 @@ package global
 import (
 	"context"
 	"fmt"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	grpcx "google.golang.org/grpc"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"time"
 
 	friendshipV1 "web/api/friendship/v1"
 	newsfeedV1 "web/api/newsfeed/v1"
@@ -19,7 +29,34 @@ var (
 	NewsfeedCLi  newsfeedV1.NewsFeedClient
 	AccountCli  accountV1.UserClient
 )
+
+
+// Set global trace provider
+func setTracerProvider(url string) error {
+	// Create the Jaeger exporter
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		return err
+	}
+	tp := tracesdk.NewTracerProvider(
+		// Set the sampling rate based on the parent span to 100%
+		tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.TraceIDRatioBased(1.0))),
+		// Always be sure to batch in production.
+		tracesdk.WithBatcher(exp),
+		// Record information about this application in an Resource.
+		tracesdk.WithResource(resource.NewSchemaless(
+			semconv.ServiceNameKey.String("web"),
+			attribute.String("env", "dev"),
+		)),
+	)
+	otel.SetTracerProvider(tp)
+	return nil
+}
 func init(){
+	if err := setTracerProvider("http://127.0.0.1:14268/api/traces"); err != nil {
+		panic(err)
+	}
+
 
 	//服务注册与发现
 	c:=consulAPI.DefaultConfig()
@@ -36,10 +73,18 @@ func init(){
 		context.Background(),
 		grpc.WithEndpoint("discovery:///friendships"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+		),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
 	)
 
 
 	if err!=nil{
+		fmt.Println("friendship" ,err)
 		fmt.Println(err)
 		return
 	}
@@ -49,6 +94,13 @@ func init(){
 		context.Background(),
 		grpc.WithEndpoint("discovery:///newsfeeds"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+		),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
 	)
 
 	if err!=nil{
@@ -61,10 +113,17 @@ func init(){
 		context.Background(),
 		grpc.WithEndpoint("discovery:///accounts"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+		),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
 	)
 
 	if err!=nil{
-		fmt.Println("newsfeed" ,err)
+		fmt.Println("account" ,err)
 		return
 	}
 	AccountCli=accountV1.NewUserClient(conn3)
@@ -74,10 +133,17 @@ func init(){
 		context.Background(),
 		grpc.WithEndpoint("discovery:///tweets"),
 		grpc.WithDiscovery(r),
+
+		grpc.WithTimeout(2*time.Second),
+		// for tracing remote ip recording
+		grpc.WithMiddleware(
+			tracing.Client(),
+			),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
 	)
 
 	if err!=nil{
-		fmt.Println("newsfeed" ,err)
+		fmt.Println("tweets" ,err)
 		return
 	}
 	TweetCli =tweetV1.NewTweetsClient(conn4)

@@ -5,7 +5,9 @@ import (
 	"friendships/internal/conf"
 	"friendships/internal/service"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 )
 
@@ -14,6 +16,9 @@ func NewGRPCServer(c *conf.Server, greeter *service.FriendshipService, logger lo
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			// 顺序不能错
+			tracing.Server(),
+			logging.Server(logger),
 		),
 	}
 	if c.Grpc.Network != "" {
